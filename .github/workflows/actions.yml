@@ -1,0 +1,15 @@
+name: 'Vue Fetch Mock - Release'
+
+on: push
+
+jobs:
+  bot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: 'Install Node'
+        uses: actions/setup-node@v1
+      - name: 'Install NPM Dependencies'
+        run: npm install
+      - name: 'Test ➔ Build'
+        run: npm run build
