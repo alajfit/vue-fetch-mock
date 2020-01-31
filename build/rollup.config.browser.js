@@ -13,6 +13,6 @@ const config = Object.assign({}, base, {
     },
 })
 
-config.plugins.push(uglify({}, minify))
+// config.plugins.push(uglify({}, minify))
 
 export default config

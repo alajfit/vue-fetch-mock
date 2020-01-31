@@ -1,10 +1,12 @@
 <template>
-    <div>
-        <slot>Issues Mounting Component</slot>
-    </div>
+  <div>
+    <slot>Issues Mounting Component</slot>
+  </div>
 </template>
 
 <script>
+import fetchMock from 'fetch-mock'
+
 export default {
     name: 'VueFetchMock',
     props: {
@@ -18,7 +20,7 @@ export default {
         },
         mocks: {
             type: Array,
-            default: []
+            default: () => []
         }
     },
     beforeMount() {
@@ -33,8 +35,7 @@ export default {
             const mocks = this.mocks
             if (mocks) {
                 mocks.forEach(mock => {
-                    fetchMock.mock({
-                        ...mock,
+                    fetchMock.mock(Object.assign({}, mock, {
                         response: (url, opts) => {
                             if (this.logger) console.info('fetch', url, opts)
                             let result = {
@@ -49,20 +50,20 @@ export default {
                                 mock.response.hasOwnProperty('status') ||
                                 mock.response.hasOwnProperty('headers')
                             ) {
-                                result = {
-                                    ...result,
-                                    ...mock.response,
-                                }
+                                result = Object.assign({},
+                                    result,
+                                    mock.response
+                                )
                             }
                             
                             return this.throttle
                                 ? new Promise(resolve => { setTimeout(() => resolve(result), this.throttle) })
                                 : result
                         }
-                    })
+                    }))
                 })
 
-                fetchMock.catch((...args) => fetchMock.realFetch.apply(window, args))
+                fetchMock.catch(() => fetchMock.realFetch.apply(window, arguments.concat()))
                 fetchMock.__prevProxy = this
             }
         },

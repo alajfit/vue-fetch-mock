@@ -20,7 +20,7 @@ export default {
         eslint(),
         vue(),
         buble({
-            transforms: { dangerousForOf: true },
+            transforms: { dangerousForOf: true, asyncAwait: false },
         }),
         replace({
             VERSION: JSON.stringify(pkg.version),
